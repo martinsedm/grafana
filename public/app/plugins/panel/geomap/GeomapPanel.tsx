@@ -574,11 +574,9 @@ export class GeomapPanel extends Component<Props, State> {
         </div>
         <Portal>
           {ttip && (ttip.data || ttip.feature) && (
-            <>
-              <VizTooltipContainer position={{ x: ttip.pageX, y: ttip.pageY }} offset={{ x: 10, y: 10 }}>
-                <DataHoverView {...ttip} />
-              </VizTooltipContainer>
-            </>
+            <VizTooltipContainer position={{ x: ttip.pageX, y: ttip.pageY }} offset={{ x: 10, y: 10 }}>
+              <DataHoverView {...ttip} />
+            </VizTooltipContainer>
           )}
         </Portal>
       </>

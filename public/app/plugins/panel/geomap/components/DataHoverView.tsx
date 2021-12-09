@@ -18,7 +18,6 @@ export class DataHoverView extends PureComponent<Props> {
   render() {
     const { data, feature, rowIndex, columnIndex } = this.props;
 
-    const grafanearstaSlack = 'slack://channel?team=T02S4RCS0&id=C02NZP90728';
     if (feature) {
       return (
         <table className={this.style.infoWrap}>
@@ -29,9 +28,6 @@ export class DataHoverView extends PureComponent<Props> {
                   <tr key={`${e}-${i}`}>
                     <th>{`${e[0]}: `}</th>
                     <td>{`${e[1]}`}</td>
-                    <a href={grafanearstaSlack}>
-                      <strong>slack link</strong>
-                    </a>
                   </tr>
                 )
             )}
@@ -53,11 +49,6 @@ export class DataHoverView extends PureComponent<Props> {
               <td>{fmt(f, rowIndex)}</td>
             </tr>
           ))}
-          <tr>
-            <a href={grafanearstaSlack}>
-              <strong>slack link</strong>
-            </a>
-          </tr>
         </tbody>
       </table>
     );
