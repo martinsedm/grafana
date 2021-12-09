@@ -15,6 +15,7 @@ import {
   DataHoverClearEvent,
   DataHoverEvent,
   DataFrame,
+  Field,
 } from '@grafana/data';
 import { config } from '@grafana/runtime';
 
@@ -286,6 +287,24 @@ export class GeomapPanel extends Component<Props, State> {
     this.initControls(options.controls);
     this.forceUpdate(); // first render
 
+    // onclick listener
+    this.map.on('click', function (evt) {
+      const feature = map.forEachFeatureAtPixel(evt.pixel, function (feature) {
+        return feature;
+      });
+      if (feature) {
+        console.log(feature);
+        const fields = feature.getProperties()?.frame?.fields;
+        fields.map((f: Field) => {
+          if (f.name === 'URL') {
+            // TODO: play around making this into a element
+            // to display the URL
+            window.open(f.values.get(0));
+          }
+        });
+      }
+    });
+
     // Tooltip listener
     this.map.on('pointermove', this.pointerMoveListener);
     this.map.getViewport().addEventListener('mouseout', (evt) => {
@@ -304,10 +323,9 @@ export class GeomapPanel extends Component<Props, State> {
   };
 
   clearTooltip = () => {
-    // FIXME: need to be able to disabled this for our toooltips
-    // if (this.state.ttip) {
-    //   this.setState({ ttip: undefined });
-    // }
+    if (this.state.ttip) {
+      this.setState({ ttip: undefined });
+    }
   };
 
   pointerMoveListener = (evt: MapBrowserEvent<UIEvent>) => {
@@ -547,16 +565,6 @@ export class GeomapPanel extends Component<Props, State> {
   render() {
     const { ttip, topRight, bottomLeft } = this.state;
 
-    /*
-     TODO: 
-     make better container for info of a object within the geomap
-
-     check if we instead want to use something like popup, 
-     search "Add annotation" in any timeseries, stays if you click it
-     OR
-     contextMenuPlugin
-     see: https://github.com/grafana/hackathon-2021-12-grafanearsta/blob/f0a108afb378c3dd90975eea773915885bf0d2a2/public/app/plugins/panel/market-trend/MarketTrendPanel.tsx#L265
-    */
     return (
       <>
         <Global styles={this.globalCSS} />
@@ -566,13 +574,11 @@ export class GeomapPanel extends Component<Props, State> {
         </div>
         <Portal>
           {ttip && (ttip.data || ttip.feature) && (
-            <VizTooltipContainer
-              position={{ x: ttip.pageX, y: ttip.pageY }}
-              offset={{ x: 10, y: 10 }}
-              pointerEvent={'auto'}
-            >
-              <DataHoverView {...ttip} />
-            </VizTooltipContainer>
+            <>
+              <VizTooltipContainer position={{ x: ttip.pageX, y: ttip.pageY }} offset={{ x: 10, y: 10 }}>
+                <DataHoverView {...ttip} />
+              </VizTooltipContainer>
+            </>
           )}
         </Portal>
       </>
