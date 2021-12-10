@@ -293,13 +293,13 @@ export class GeomapPanel extends Component<Props, State> {
         return feature;
       });
       if (feature) {
-        console.log(feature);
-        const fields = feature.getProperties()?.frame?.fields;
-        fields.map((f: Field) => {
-          if (f.name === 'URL') {
-            // TODO: play around making this into a element
-            // to display the URL
-            window.open(f.values.get(0));
+        feature.getProperties()?.frame?.fields.map((f: Field) => {
+          if (f.name === 'slackId') {
+            const slackbaseURL = `slack://channel?team=T02S4RCS0&id=`;
+            // wonder why we get multiple elements in the first place
+            // have to check that it is actually the person in the first element of the slack
+            // or do we have to keep track of them from some other index
+            window.open(`${slackbaseURL}+${f.values.get(0)}`);
           }
         });
       }
