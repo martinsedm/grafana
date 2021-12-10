@@ -82,8 +82,6 @@ export const VizTooltipContainer: React.FC<VizTooltipContainerProps> = ({
 
   const styles = useStyles2(getStyles);
 
-  // TODO: remove me
-  console.log(placement);
   return (
     <div
       ref={tooltipRef}
